@@ -1,0 +1,39 @@
+html,body {
+    height:100vh;  
+    margin: 0 auto;
+    padding-top: 00px;
+    overflow: scroll; 
+  }
+
+#about_opening {
+    min-height: 700px;
+    background-image: url("../img/about_main.jpg");
+    background-repeat:no-repeat;
+    background-size:cover;
+    color: #fcfdfd;
+    text-align: center;
+    padding: 300px;
+    margin-top: -05%;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.navbar {
+    background-color: #26266c;
+    color: #d1e2e2;
+}
+
+#about_bottom {
+    min-height: 600px;
+    background-color: #d1e2e2;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

@@ -7,6 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Ethereum Voting dApp</title>
 
+    <link href="css/about.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -17,7 +18,7 @@
     <![endif]-->
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="index.html">WittyNameHere</a>
@@ -28,43 +29,21 @@
       </div>
     </nav>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Decentralized Voting dApp</h1>
-          <hr/>
-          <br/>
-        </div>
-      </div>
-      <div id="candidate_box" class="container">
-        <!-- CANDIDATES SHOW UP HERE-->
-      </div>
+    <div class="container-fluid" id="about_opening">
+        <h1>A new Open-Sourced Voting Platform built on top of Ethereum</h1>
+        </br>
+        <a role="button" class="btn btn-primary btn-lg" href="https://github.com/Ph360Voting/decentralizedVotingPlatform">
+            <img hrf="img/mark.ico"></span>
+            View Source
+        </a>
+    </div> 
 
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
-        <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
-        <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
-      </div>
-
-      <div class="container">
-        <div class="col-md-4">
-          <p>Enter your ID and click candidate to vote</p>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
-          </div>
-          <button class="btn btn-primary btn-vote" type="button">Vote</button>
-          <div id="msg">
-            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
-          </div>
-        </div>
-
-        <div class="col-md-6">
-            <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
-            <div id="vote_box"></div>
-        </div>
-      </div>
+    <div class="container-fluid" id="about_bottom">
+        
     </div>
 
+
+    
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

@@ -19,6 +19,7 @@ contract Voting {
         // "bool doesExist" is to check if this Struct exists
         // This is so we can keep track of the candidates 
         bool doesExist;
+        uint Rank[]; //dynamically allocated array of integers
     }
 
     // These state variables are used keep track of the number of Candidates/Voters 

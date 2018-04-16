@@ -35,6 +35,7 @@ App = {
     })
     return App.bindEvents();
   },
+
   bindEvents: function() {
     $(document).on('click', '.btn-addCandidate', App.addCandidate);
     $(document).on('click', '.btn-vote', App.vote);

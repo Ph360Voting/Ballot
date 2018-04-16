@@ -1,2 +1,9 @@
-# decentralizedVotingPlatform
-A decentralized voting dApp on the Ethereum Network
+# Our decentralized App built using Truffle 
+
+## Setup
+```
+truffle compile
+truffle migrate
+npm run dev
+```
+

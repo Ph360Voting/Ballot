@@ -33,6 +33,7 @@ contract Voting {
     mapping (uint => Candidate) candidates;
     mapping (uint => Voter) voters;
     
+    // contract constructor
     function Voting() public {
         numCandidates = 0;
         numVoters = 0;

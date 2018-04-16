@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.17;
 // written for Solidity version 0.4.18 and above that doesnt break functionality
 
 contract Voting {
@@ -25,7 +25,6 @@ contract Voting {
     // and used to as a way to index them     
     uint numCandidates; // declares a state variable - number Of Candidates
     uint numVoters;
-
     
     // Think of these as a hash table, with the key as a uint and value of 
     // the struct Candidate/Voter. These mappings will be used in the majority
@@ -34,6 +33,11 @@ contract Voting {
     mapping (uint => Candidate) candidates;
     mapping (uint => Voter) voters;
     
+    function Voting() public {
+        numCandidates = 0;
+        numVoters = 0;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  These functions perform transactions, editing the mappings *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -43,7 +47,7 @@ contract Voting {
         uint candidateID = numCandidates++;
         // Create new Candidate Struct with name and saves it to storage.
         candidates[candidateID] = Candidate(name,party,true);
-        AddedCandidate(candidateID);
+        emit AddedCandidate(candidateID);
     }
 
     function vote(bytes32 uid, uint candidateID) public {

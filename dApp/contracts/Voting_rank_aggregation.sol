@@ -10,16 +10,17 @@ contract Voting {
     // describes a Voter, which has an id and the ID of the candidate they voted for
     struct Voter {
         bytes32 uid; // bytes32 type are basically strings
-        uint candidateIDVote;
+        //commented out from original: uint candidateIDVote;
+        uint candidateVote[]; //array of integers representing the vote
     }
     // describes a Candidate
     struct Candidate {
         bytes32 name;
-        bytes32 party; 
+        bytes32 description; 
         // "bool doesExist" is to check if this Struct exists
         // This is so we can keep track of the candidates 
         bool doesExist;
-        uint Rank[]; //dynamically allocated array of integers
+        uint rank[]; //dynamically allocated array of integers
     }
 
     // These state variables are used keep track of the number of Candidates/Voters 
@@ -34,9 +35,6 @@ contract Voting {
     mapping (uint => Candidate) candidates;
     mapping (uint => Voter) voters;
     
-     //use a uint because can store tremendously large numbers, unsigned
-     //uint[] storage rank
-    
     // contract constructor
     function Voting() public {
         numCandidates = 0;
@@ -47,17 +45,17 @@ contract Voting {
      *  These functions perform transactions, editing the mappings *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    function addCandidate(bytes32 name, bytes32 party) public {
+    function addCandidate(bytes32 name, bytes32 description) public {
         // candidateID is the return variable
         uint candidateID = numCandidates++;
         // Create new Candidate Struct with name and saves it to storage.
-        candidates[candidateID] = Candidate(name,party,true);
+        candidates[candidateID] = Candidate(name,description,true);
         emit AddedCandidate(candidateID);
     }
 
-    function vote(bytes32 uid, uint candidateID) public {
+    function vote(bytes32 uid, uint candidateVote[]) public {
         // checks if the struct exists for that candidate
-        if (candidates[candidateID].doesExist == true) {
+        if (numCandidates == candidateVote[].size) {
             uint voterID = numVoters++; //voterID is the return variable
             voters[voterID] = Voter(uid,candidateID);
         }
@@ -89,7 +87,7 @@ contract Voting {
         return numVoters;
     }
     // returns candidate information, including its ID, name, and party
-    function getCandidate(uint candidateID) public view returns (uint,bytes32, bytes32) {
-        return (candidateID,candidates[candidateID].name,candidates[candidateID].party);
+    function getCandidate(uint candidateID) public view returns (uint,bytes32, bytes32, uint) {
+        return (candidateID,candidates[candidateID].name,candidates[candidateID].party,candidates[candidateID].rank);
     }
 }

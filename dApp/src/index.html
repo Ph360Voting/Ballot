@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Ethereum Voting Dapp</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Decentralized Voting dApp</h1>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+      <div id="candidate_box" class="container">
+        <!-- CANDIDATES SHOW UP HERE-->
+      </div>
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
+        <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
+        <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
+      </div>
+
+      <div class="container">
+        <div class="col-md-4">
+          <p>Enter your ID and click candidate to vote</p>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
+          </div>
+          <button class="btn btn-primary btn-vote" type="button">Vote</button>
+          <div id="msg">
+            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+          </div>
+        </div>
+
+        <div class="col-md-6">
+            <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
+            <div id="vote_box"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

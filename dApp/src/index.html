@@ -7,6 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Ethereum Voting dApp</title>
 
+    <link href="css/index.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -17,51 +18,53 @@
     <![endif]-->
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="index.html">WittyNameHere</a>
         </div>
         <div class="navbar-header navbar-right">
-            <a class="navbar-brand" href="about.html">About</a>
-          </div>
+          <a class="navbar-brand" href="about.html">About</a>
+        </div>
       </div>
     </nav>
 
+
+    <div class="container-fluid d-flex justify-content-center" id="index_title">
+      <h1>Decentralized Voting dApp</h1>
+    </div>
+    <div class="container-fluid d-flex justify-content-center" id="index_button">
+      <button type="button" class="btn btn-primary btn-lg">Enter a Vote Instance ID</button> 
+      
+      <button type="button" class="btn btn-primary btn-lg ">Create a Vote Instance</button>
+    </div>
+
+    
+    <div id="candidate_box" class="container">
+      <!-- CANDIDATES SHOW UP HERE-->
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
+      <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
+      <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
+    </div>
+
     <div class="container">
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Decentralized Voting dApp</h1>
-          <hr/>
-          <br/>
+      <div class="col-md-4">
+        <p>Enter your ID and click candidate to vote</p>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
+        </div>
+        <button class="btn btn-primary btn-vote" type="button">Vote</button>
+        <div id="msg">
+          <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
         </div>
       </div>
-      <div id="candidate_box" class="container">
-        <!-- CANDIDATES SHOW UP HERE-->
-      </div>
 
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
-        <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
-        <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
-      </div>
-
-      <div class="container">
-        <div class="col-md-4">
-          <p>Enter your ID and click candidate to vote</p>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
-          </div>
-          <button class="btn btn-primary btn-vote" type="button">Vote</button>
-          <div id="msg">
-            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
-          </div>
-        </div>
-
-        <div class="col-md-6">
-            <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
-            <div id="vote_box"></div>
-        </div>
+      <div class="col-md-6">
+        <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
+        <div id="vote_box"></div>
       </div>
     </div>
 

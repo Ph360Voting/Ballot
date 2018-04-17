@@ -1,0 +1,25 @@
+html,body {
+    height:100vh;  
+    margin: 0 auto;
+    padding-top: 00px;
+    overflow: auto; 
+  }
+
+.navbar {
+    background-color: #26266c;
+    color: #d1e2e2;
+}
+
+#index_title {
+    margin: 5%;
+    min-height: 1em;
+}
+
+#index_button {
+    margin: 5%;
+    min-height: 1em;
+}
+
+#index_button .btn {
+    margin: 1em;
+}

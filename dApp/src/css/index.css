@@ -5,18 +5,17 @@ html,body {
     overflow: auto; 
   }
 
-.navbar {
-    background-color: #26266c;
-    color: #d1e2e2;
+  .navbar {
+    background-color: #16163d;
 }
 
 #index_title {
-    margin: 5%;
+    margin-top: 5%;
     min-height: 1em;
 }
 
 #index_button {
-    margin: 5%;
+    margin-top: 5%;
     min-height: 1em;
 }
 

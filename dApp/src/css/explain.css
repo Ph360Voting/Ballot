@@ -1,0 +1,21 @@
+html,body {
+    height:100vh;  
+    margin: 0 auto;
+    padding-top: 00px;
+    overflow: auto; 
+  }
+
+.navbar {
+    background-color: #16163d;
+}
+
+#jumbo {
+    min-height: 105%;
+    background: linear-gradient(#0c0c16, #40406d);
+}
+
+.jumbotron {
+    width: 60%;
+    margin-top: 10%;
+    background-color: rgb(72, 68, 99);
+}

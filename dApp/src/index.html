@@ -18,13 +18,14 @@
     <![endif]-->
   </head>
   <body>
-    <nav class="navbar">
+    <nav class="navbar justify-content-between">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.html">WittyNameHere</a>
+          <a class="navbar-brand text-white" href="index.html">WittyNameHere</a>
         </div>
-        <div class="navbar-header navbar-right">
-          <a class="navbar-brand" href="about.html">About</a>
+        <div class="navbar-header">
+          <a class="navbar-brand text-white" href="explain.html">How It Works</a>
+          <a class="navbar-brand text-white" href="about.html">About</a>
         </div>
       </div>
     </nav>
@@ -33,41 +34,74 @@
     <div class="container-fluid d-flex justify-content-center" id="index_title">
       <h1>Decentralized Voting dApp</h1>
     </div>
+
     <div class="container-fluid d-flex justify-content-center" id="index_button">
-      <button type="button" class="btn btn-primary btn-lg">Enter a Vote Instance ID</button> 
+      <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseID" aria-expanded="false" aria-controls="collapseExample">
+        Enter a Vote Instance ID
+      </button> 
+      <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseNEW" aria-expanded="false" aria-controls="collapseExample">
+        Create a Vote Instance
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseID">
+      <div class="card card-body">
+        <div class="container-fluid">
+            <div class="col-md-4">
+              <p>Enter your ID and click candidate to vote</p>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
+              </div>
+              <button class="btn btn-primary btn-vote" type="button">Vote</button>
+              <div id="msg">
+                <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+              </div>
+            </div>
       
-      <button type="button" class="btn btn-primary btn-lg ">Create a Vote Instance</button>
+            <div class="col-md-6">
+              <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
+              <div id="vote_box"></div>
+            </div>
+          </div>
+      </div>
     </div>
 
-    
-    <div id="candidate_box" class="container">
-      <!-- CANDIDATES SHOW UP HERE-->
-    </div>
-
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
-      <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
-      <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
-    </div>
-
-    <div class="container">
-      <div class="col-md-4">
-        <p>Enter your ID and click candidate to vote</p>
+    <div class="collapse" id="collapseNEW">
+      <div class="card card-body">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
+          <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
+          <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
+          <button class="btn btn-primary btn-addCandidate" type="button">Add Candidate</button>
         </div>
-        <button class="btn btn-primary btn-vote" type="button">Vote</button>
-        <div id="msg">
-          <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+        <div id="candidate_box" class="container-fluid">
+            <!-- CANDIDATES SHOW UP HERE-->
         </div>
       </div>
 
-      <div class="col-md-6">
-        <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
-        <div id="vote_box"></div>
-      </div>
+      <form>
+        <div class="form-group">
+          <label for="exampleInputEmail1">ALL BELOW IS NOT YET IMPLEMENTED, JUST A BASELINE</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
 
+<!-- 
+  A BUTTON THAT GIVES SUGGESTIONS BESIDE IT
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+  Tooltip on top
+</button> 
+-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

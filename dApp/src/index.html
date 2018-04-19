@@ -44,8 +44,24 @@
       </button>
     </div>
 
-    <div class="collapse" id="collapseID">
+    <div class="container-fliud collapse" id="collapseID">
+      <div class="card w-50 mx-auto text-center border border-white">
+        <class="card-title">Enter the Voting Instance ID</class>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="voter_instance" placeholder="Voting Instance ID">
+          </div>
+          <button class="btn btn-primary btn-vote" type="button" data-toggle="tooltip" data-placement="bottom" title="Publish your vote to the Voting Instance.">Vote</button>
+          <div id="msg">
+            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+          </div>
+        </div>
+      </div>
+
+        <br/><br/><br/><br/><br/>
+
       <div class="card card-body">
+        EVERYTHING HERE AND BELOW IS OLD. ABOVE IS GOOD
         <div class="container-fluid">
             <div class="col-md-4">
               <p>Enter your ID and click candidate to vote</p>
@@ -57,7 +73,6 @@
                 <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
               </div>
             </div>
-      
             <div class="col-md-6">
               <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
               <div id="vote_box"></div>
@@ -67,7 +82,38 @@
     </div>
 
     <div class="collapse" id="collapseNEW">
+      <form class="w-50 p-10 mx-auto text-center border border-white">
+        <!-- The radio buttons -->
+        <div class="custom-control custom-radio">
+            <input type="radio" id="premium" name="radio" class="custom-control-input">
+            <label class="custom-control-label" for="premium" data-toggle="tooltip" data-placement="bottom" title="While this will gaurantee each vote is intamperable, it is more expensive.">
+              Premium Voting (Every vote gets uploaded to the blockchain)
+            </label>
+          </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" id="regular" name="radio" class="custom-control-input">
+          <label class="custom-control-label" for="regular" data-toggle="tooltip" data-placement="bottom" title="Less expensive and yet succeptible to hacks.">
+            Everyday Voting (Only ballet results get uploaded to the blockchain)
+          </label>
+        </div>
+
+        <br/><br/>
+
+        <!-- The Candidate Specification-->
+        <div class="form-group">
+          Candidates
+          <input type="email" class="form-control" id="Candidate1" aria-describedby="CandidateNote" placeholder="Candidate 1">
+          <small id="CandidateNote" class="form-text text-muted">Add as many candidates as desired</small>
+          <!-- interactive button to add more candidates-->
+        </div>
+        
+        <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Once deployed, you will recieve a Ballet ID. This Ballet ID is needed for anyone wanting to participate in this voting instance.">Deploy Voting Instance</button>
+      </form>
+
+      <br/><br/><br/><br/><br/>
+
       <div class="card card-body">
+          ALL BELOW IS OLD, ABOVE IS RELEVANT
         <div class="input-group mb-3">
           <input type="text" class="form-control" id="candidate_id" placeholder="Add Candidate">
           <input type="text" class="form-control" id="candidate_party" placeholder="Candidate's Party">
@@ -78,23 +124,8 @@
         </div>
       </div>
 
-      <form>
-        <div class="form-group">
-          <label for="exampleInputEmail1">ALL BELOW IS NOT YET IMPLEMENTED, JUST A BASELINE</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-        </div>
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Check me out</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
     </div>
+
 
 <!-- 
   A BUTTON THAT GIVES SUGGESTIONS BESIDE IT

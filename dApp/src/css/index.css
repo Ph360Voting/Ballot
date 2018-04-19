@@ -22,3 +22,14 @@ html,body {
 #index_button .btn {
     margin: 1em;
 }
+
+#collapseID {
+    margin-top: 5rem;
+}
+#collapseID card {
+    padding: 10rem;
+}
+
+#collapseNEW {
+    margin-top: 5rem;
+}

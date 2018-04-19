@@ -2,5 +2,7 @@
   "server": {
     "baseDir": ["./src", "./build/contracts"]
   },
-  "notify": false
+  "notify": false,
+  "port": 4200
+
 }

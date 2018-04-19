@@ -11,11 +11,30 @@ html,body {
 
 #jumbo {
     min-height: 105%;
-    background: linear-gradient(#0c0c16, #40406d);
+    background: linear-gradient(#0c0c16, #38385f);
 }
 
-.jumbotron {
-    width: 60%;
-    margin-top: 10%;
-    background-color: rgb(72, 68, 99);
+#jumbo .container {
+    margin: 5rem;
+    max-width:60%;
+    padding: 3rem;
+    background: #40406d;
+    color: #9494a3;
+    list-style-type: circle;
+}
+
+#jumbo .container h1 {
+    color: #d9d9e4;
+    text-align: center;
+    padding-bottom: 2rem;
+    
+}
+
+#jumbo .container li {
+    padding: 0.5rem;
+}
+
+#lead {
+    margin-top: 2rem;
+    text-align: center;
 }

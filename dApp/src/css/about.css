@@ -21,9 +21,13 @@ html,body {
 }
 
 .carousel-item {
-    min-height: 400px;
+    min-height: 1rem;
     margin: auto;
     max-width: 70%;
+}
+
+#carousel_buttons {
+    min-height: 15rem;
 }
 #about_explination {
     height: 90%;

@@ -234,30 +234,28 @@ App = {
 
   // creating a new ballot
   createBallot: function() {
+
+    var length = $("#ballot_length").val();  //length of time ballot will be open
+    var candidates = [];                      // participarting candidates in ballot
+    var votes = [];
+    var candlist = $("input");
+    for (let i = 0 ; i <= candlist.length ; i++) {
+      let temp = "#Candidate" + (i+1);
+      candidates[i] = $(temp).val();
+      votes[i] = 0;
+    }
+    // ballotID creation
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    var ballotID = "";
+    for (let i = 0 ; i < 8 ; i++)
+      ballotID += possible.charAt(Math.floor(Math.random() * possible.length));
+
     App.contracts.Voting.deployed().then(function(instance) {
-      var votingInstance = instance;
-
-      var length = $("#ballet_length").val();   //length of time ballot will be open
-      var candidates = [];                      // participarting candidates in ballot
-      var votes = [];
-      var candlist = document.querySelector("#cands");
-      for (let i = 1 ; i <= candlist.length ; i++) {
-        let temp = "#Candidate" + i;
-        candidates[i] = $(temp).val();
-        votes[i] = 0;
-      }
-
-      // ballotID creation
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-      var balletID = "";
-      for (let i = 0 ; i < 8 ; i++)
-        ballotID += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      // update the user on the ballotID, so that ballot can be accessed
-      $("#ballotID_return").html(balletID);
-
       // use the contract function createBallot
-      votingInstance.createBallot(ballotID, len, "country", candidates, votes);
+      instance.createBallot(ballotID, parseInt(length), candlist.length, candidates, votes).then(function(result){
+        // update the user on the ballotID, so that ballot can be accessed
+        $("#ballotID_return").html(ballotID);
+      })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
     })

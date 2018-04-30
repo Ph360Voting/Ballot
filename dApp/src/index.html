@@ -116,26 +116,28 @@
             <input type="text" class="form-control" id="Candidate1" aria-describedby="CandidateNote" placeholder="Candidate 1">
             <input type="text" class="form-control" id="Candidate2" aria-describedby="CandidateNote" placeholder="Candidate 2">
           </div>
+          <br/>
           <button type="button" class="btn btn-primary btn-addCand" data-toggle="tooltip" data-placement="bottom" title="Add another candidate to ballot">Add Candidate</button>
           <button type="button" class="btn btn-primary btn-removeCand" data-toggle="tooltip" data-placement="bottom" title="Remove latest candidate, as long as there are at least 2">Remove Candidate</button>
           <small id="CandidateNote" class="form-text text-muted">Add as many candidates as desired</small>
         
         </div>
+        <br/>
         <div class="form-group">
 
           <p>Hours from now when Ballet will close</p>
           <select id="ballot_length" class="form-control">
             <option selected>Hours...</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option>
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
           </select>
 
         </div>
         <br/>
         <button type="button" class="btn-lg btn-primary btn-createBallot" data-toggle="tooltip" data-placement="bottom" title="Once deployed, you will recieve a Ballet ID. This Ballet ID is needed for anyone wanting to participate in this voting instance.">Deploy Voting Instance</button>
       </form>
-
-      <div id="ballotID_return"></div> <!-- will display ballot ID after ballot initialization-->
-
+      <br/><br/><br/>
+      <div id="ballotID_return" class="container-fluid d-flex justify-content-center"></div> <!-- will display ballot ID after ballot initialization-->
+      <br/><br/><br/><br/>
     </div>
 
 

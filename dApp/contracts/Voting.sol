@@ -54,42 +54,27 @@ contract Voting {
 
     // contract constructor
     constructor() public {
-        ballotCount = 0;
-        /*
-        // all this is just for testing, to have a ballot already up and running
-        bytes32[] cands;
-        cands[0] = "Alice";
-        cands[1] = "Bob";
-        uint[] votes;
-        votes[0] = 0;
-        votes[1] = 0;
-        bytes32 ballotid = "aaaaaaa";
-        ballots[ballotid] = Ballot(999999, Restriction.None, "country", 2, cands, votes);
-        */
     }
 
     enum Restriction {None, Country}
     struct Ballot {
         uint length;
         Restriction restriction;  // the restrictions that can be applied to voting
-        bytes32 country;
         uint numCandidates;
         bytes32[] candidates;
         uint[] voteCount;
     }
     mapping (bytes32 => Ballot) ballots; // unique ID that will be used to identify the Ballot
-    uint ballotCount;   // the amount of ballots created overall
 
     // a function to create a ballot
-    function createBallot(bytes32 ballotID, uint len, bytes32 country, uint numcands, bytes32[] cands, uint[] votes) public { 
+    function createBallot(bytes32 ballotID, uint len, uint numcands, bytes32[] cands, uint[] votes) public { 
         Restriction rest = Restriction.None;
-        ballots[ballotID] = Ballot(len, rest, country, numcands, cands, votes);
-        ballotCount++;
+        ballots[ballotID] = Ballot(len, rest, numcands, cands, votes);
     }
 
     // a view function to find a ballot
-    function getBallotInfo(bytes32 ballotID) public view returns (uint, Restriction, bytes32, uint ) {
-        return ( ballots[ballotID].length, ballots[ballotID].restriction, ballots[ballotID].country, ballots[ballotID].numCandidates);
+    function getBallotInfo(bytes32 ballotID) public view returns (uint, Restriction, uint ) {
+        return( ballots[ballotID].length, ballots[ballotID].restriction, ballots[ballotID].numCandidates);
     }
 
     // a view function to access a ballots candidates

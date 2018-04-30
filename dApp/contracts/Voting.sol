@@ -7,44 +7,14 @@ contract Voting {
     // to vote for the candidate, since it is one of arguments for the function "vote")
     event AddedCandidate(uint candidateID);
 
-    // describes a Voter, which has an id and the ID of the candidate they voted for
-    struct Voter {
-        bytes32 uid; // bytes32 type are basically strings
-        uint candidateIDVote;
-    }
-    // describes a Candidate
-    struct Candidate {
-        bytes32 name;
-        bytes32 party; 
-        // "bool doesExist" is to check if this Struct exists
-        // This is so we can keep track of the candidates 
-        bool doesExist; 
-    }
 
-    // These state variables are used keep track of the number of Candidates/Voters 
-    // and used to as a way to index them     
-    uint numCandidates; // declares a state variable - number Of Candidates
-    uint numVoters;
-    
-    // Think of these as a hash table, with the key as a uint and value of 
-    // the struct Candidate/Voter. These mappings will be used in the majority
-    // of our transactions/calls
-    // These mappings will hold all the candidates and Voters respectively
-    mapping (uint => Candidate) candidates;
-    mapping (uint => Voter) voters;
-    
-    // contract constructor
-    function Voting() public {
-        numCandidates = 0;
-        numVoters = 0;
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  These functions perform transactions, editing the mappings *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+    /*
     function addCandidate(bytes32 name, bytes32 party) public {
-        // candidateID is the return variable
+        candidateID is the return variable
         uint candidateID = numCandidates++;
         // Create new Candidate Struct with name and saves it to storage.
         candidates[candidateID] = Candidate(name,party,true);
@@ -58,7 +28,7 @@ contract Voting {
             voters[voterID] = Voter(uid,candidateID);
         }
     }
-
+    */
     /* * * * * * * * * * * * * * * * * * * * * * * * * * 
      *  Getter Functions, marked by the key word "view" *
      * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -66,7 +36,7 @@ contract Voting {
 
     // finds the total amount of votes for a specific candidate by looping
     // through voters 
-    function totalVotes(uint candidateID) view public returns (uint) {
+    /*function totalVotes(uint candidateID) view public returns (uint) {
         uint numOfVotes = 0; // we will return this
         for (uint i = 0; i < numVoters; i++) {
             // if the voter votes for this specific candidate, we increment the number
@@ -76,16 +46,54 @@ contract Voting {
         }
         return numOfVotes; 
     }
+    */
 
-    function getNumOfCandidates() public view returns(uint) {
-        return numCandidates;
+
+    /* My added functions for uPort integration and accessing a ballot (basicall,
+    from the beginning to the point that the person actually gets to vote)  */
+
+    // contract constructor
+    constructor() public {
+        ballotCount = 0;
+        /*
+        // all this is just for testing, to have a ballot already up and running
+        bytes32[] cands;
+        cands[0] = "Alice";
+        cands[1] = "Bob";
+        uint[] votes;
+        votes[0] = 0;
+        votes[1] = 0;
+        bytes32 ballotid = "aaaaaaa";
+        ballots[ballotid] = Ballot(999999, Restriction.None, "country", 2, cands, votes);
+        */
     }
 
-    function getNumOfVoters() public view returns(uint) {
-        return numVoters;
+    enum Restriction {None, Country}
+    struct Ballot {
+        uint length;
+        Restriction restriction;  // the restrictions that can be applied to voting
+        bytes32 country;
+        uint numCandidates;
+        bytes32[] candidates;
+        uint[] voteCount;
     }
-    // returns candidate information, including its ID, name, and party
-    function getCandidate(uint candidateID) public view returns (uint,bytes32, bytes32) {
-        return (candidateID,candidates[candidateID].name,candidates[candidateID].party);
+    mapping (bytes32 => Ballot) ballots; // unique ID that will be used to identify the Ballot
+    uint ballotCount;   // the amount of ballots created overall
+
+    // a function to create a ballot
+    function createBallot(bytes32 ballotID, uint len, bytes32 country, uint numcands, bytes32[] cands, uint[] votes) public { 
+        Restriction rest = Restriction.None;
+        ballots[ballotID] = Ballot(len, rest, country, numcands, cands, votes);
+        ballotCount++;
+    }
+
+    // a view function to find a ballot
+    function getBallotInfo(bytes32 ballotID) public view returns (uint, Restriction, bytes32, uint ) {
+        return ( ballots[ballotID].length, ballots[ballotID].restriction, ballots[ballotID].country, ballots[ballotID].numCandidates);
+    }
+
+    // a view function to access a ballots candidates
+    function getCandidateInfo(bytes32 ballotID, uint candidateID) public view returns (bytes32) {
+        return( ballots[ballotID].candidates[candidateID]);
     }
 }

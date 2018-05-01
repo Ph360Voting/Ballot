@@ -47,7 +47,7 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '.btn-addCandidate', App.addCandidate);
-    $(document).on('click', '.btn-ballotCheck', App.LoadQR);
+    $(document).on('click', '.btn-ballotCheck', App.ballotCheck);
     $(document).on('click', '.btn-numOfVotes', App.findNumOfVotes);
 
     $(document).on('click', '.btn-vote', App.vote);
@@ -57,6 +57,7 @@ App = {
     $(document).on('click', '.btn-removeCand', App.removeCand);
   },
 
+  /*
   // function called when user adds a candidate
   addCandidate: function() {
     // deploy the voting contract
@@ -138,31 +139,44 @@ App = {
       console.error("ERROR! " + err.message)
     })
   },
-
+*/
   // checks that the inputted ballot is real and still active, and loads it into window
   ballotCheck: function() {
     var uid = $("#ballot_id").val(); //getting user inputted ballot id
     if (uid == ""){
-      $("#msg").html("<p>Please enter id.</p>")
-      return
+      $("#msg").html("<p>Please enter id.</p>");
+      return;
     }
 
     App.contracts.Voting.deployed().then(function(instance) {
-      var votingInstance = instance;
+      instance.confirmBallot(uid).then(function(result) {
+        if (!result) {
+          $("#msg").html("<p>No ballot with inputted ID. Either incorrect Ballot ID or nonexistent ballot.</p>");
+          exists = false;
+          return; 
+        }
+        else {          
+          instance.getCandidateSize(uid).then(function(size) {
+            window.numOfCands = size;
+          })
 
-      // use the contract function getBallotInfo, which does not cost gas, and try to get ballot
-      window.ballot = votingInstance.getBallotInfo(uid);
-      var candidates = [];
-      for (let i = 0 ; i < ballot[3] ; ++i) {
-        candidates[i] = votingInstance.getCandidateInfo(uid, i)
-      }
-      window.candidates = candidates;
-
+          window.candidates = [];
+          instance.getCandidateInfo(uid).then(function(cands) {
+            for (let i = 0 ; i < window.numOfCands ; ++i)
+              window.candidates[i] = web3.toAscii(cands[i]);
+        })
+  
+        return App.LoadQR();
+        }
+      })
+      
+      /*
       var currentTime = Date.now();
       if (currentTime > ballot[0]) // if true then the ballot is no longer active
         return
       else
         return App.LoadQR();
+      */
 
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
@@ -170,7 +184,10 @@ App = {
   },
 
   // Loads the QR for uPort if the inputted Ballot ID is found and verified
-  LoadQR: function() {  
+  LoadQR: function() { 
+    //$("#msg").html("");
+    $("#vote_space").html("");
+    window.qr = true; 
     // Request credentials to login
     uport.requestCredentials({
       requested: ['name', 'country'],
@@ -190,40 +207,48 @@ App = {
 
         // Nest QR in <a> and inject
         aTag.appendChild(qr)
-        document.querySelector('#kqr').appendChild(aTag)
+        $('#kqr').html(aTag)
 
       }).then((credentials) => {
-        if (window.ballot.restriction == "None" || window.ballot.country == credentials.country) {
-          let form = document.createElement("form");
-          form.setAttributes("class", "w-50 p-10 mx-auto text-center border border-white")
+        var form = document.createElement("form");
+        form.setAttribute("class", "container-fliud h-50 p-5 mx-auto text-center d-flex flex-column align-content-between")
 
-          let ul = document.createElement("ul")
-          for (let i = 0 ; i < window.ballot[3] ; ++i) {
-            var radio = document.createElement("div");
-            radio.setAttribute("class", "custom-control custom-radio");
+        var title = document.createElement("p");
+        var head = document.createElement("h2");
+        head.innerHTML = "Vote below:";
+        title.append(head);
+        form.append(title);
 
-            var input = document.createElement("input");
-            input.setAttribute("type", "radio");
-            input.setAttribute("id", "candidate"+i);
-            input.setAttribute("name", "radio");
-            input.setAttribute("class", "custom-control-input");
-            radio.appendChild(input);
+        for (let i = 0 ; i < window.numOfCands -1 ; ++i) {
+          var radio = document.createElement("div");
+          radio.setAttribute("class", "custom-control custom-radio");
 
-            var label = document.createElement("label");
-            label.setAttribute("class", "custom-control-label");
-            label.setAttribute("for", "candidate"+i);
-            label.innerHTML = label.innerHTML + window.candidates[i];
-            radio.appendChild(label);            
-            form.appendChild(radio);
-          }
-          var button = document.createElement("button");
-          button.setAttribute("type", "submit");
-          button.setAttribute("class", "btn btn-primary btn-castVote");
-          form.appendChild(button);
-          $("#vote_space").appendChild(form);
+          var input = document.createElement("input");
+          input.setAttribute("type", "radio");
+          input.setAttribute("id", "candidate"+i);
+          input.setAttribute("name", "radio");
+          input.setAttribute("class", "custom-control-input");
+          radio.append(input);
+
+          var label = document.createElement("label");
+          label.setAttribute("class", "custom-control-label");
+          label.setAttribute("for", "candidate"+i);
+          label.innerHTML = window.candidates[i];
+          radio.append(label); 
+
+          form.append(radio);
         }
-        else 
-          $("#msg").html("<p>You do not have access to this ballot instance.</p>")
+        var breakd = document.createElement("br");
+        form.append(breakd);
+        form.append(breakd);
+        
+        var button = document.createElement("button");
+        button.setAttribute("class", "btn btn-primary btn-castVote");
+        button.setAttribute("type", "button");
+        button.innerHTML = "Vote!";
+        form.append(button);
+        $("#vote_space").html(form);
+        $('#kqr').html("");
       })
   },
 
@@ -240,10 +265,10 @@ App = {
       $("#length_msg").html("<p>Please pick a length of time this ballot will be active.</p>");
       return;
     }
-    var candidates = [];                      // participarting candidates in ballot
+    var candidates = [];  // participarting candidates in ballot
     var votes = [];
     var candlist = $("input");
-    for (let i = 0 ; i <= candlist.length ; i++) {
+    for (let i = 0 ; i < candlist.length - 1 ; i++) {
       let temp = "#Candidate" + (i+1);
       if ($(temp).val() == "") {
         $("#candidate_msg").html("<p>Candidates not entered. Please delete unused candidates. Minimum amount of candidates is 2.</p>");
@@ -252,6 +277,7 @@ App = {
       candidates[i] = $(temp).val();
       votes[i] = 0;
     }
+
     // ballotID creation
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     var ballotID = "";

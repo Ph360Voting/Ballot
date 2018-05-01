@@ -47,7 +47,7 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '.btn-addCandidate', App.addCandidate);
-    $(document).on('click', '.btn-ballotCheck', App.ballotCheck);
+    $(document).on('click', '.btn-ballotCheck', App.LoadQR);
     $(document).on('click', '.btn-numOfVotes', App.findNumOfVotes);
 
     $(document).on('click', '.btn-vote', App.vote);

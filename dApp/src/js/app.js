@@ -236,11 +236,19 @@ App = {
   createBallot: function() {
 
     var length = $("#ballot_length").val();  //length of time ballot will be open
+    if (length == "Hours...") {
+      $("#length_msg").html("<p>Please pick a length of time this ballot will be active.</p>");
+      return;
+    }
     var candidates = [];                      // participarting candidates in ballot
     var votes = [];
     var candlist = $("input");
     for (let i = 0 ; i <= candlist.length ; i++) {
       let temp = "#Candidate" + (i+1);
+      if ($(temp).val() == "") {
+        $("#candidate_msg").html("<p>Candidates not entered. Please delete unused candidates. Minimum amount of candidates is 2.</p>");
+        return;
+      }
       candidates[i] = $(temp).val();
       votes[i] = 0;
     }
@@ -254,7 +262,7 @@ App = {
       // use the contract function createBallot
       instance.createBallot(ballotID, parseInt(length), candlist.length, candidates, votes).then(function(result){
         // update the user on the ballotID, so that ballot can be accessed
-        $("#ballotID_return").html(ballotID);
+        $("#ballotID_return").html("<p>Ballot ID:<\p>" + ballotID);
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)

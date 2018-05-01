@@ -65,34 +65,12 @@
         <div id="kqr"></div>  <!-- Where the QR code will be loaded if the ballot is found-->
         <div id="vote_space"></div> <!-- Where the voting selection process actually takes place-->
       </div>
-
-        <br/><br/><br/><br/><br/>
-
-      <div class="card card-body">
-        EVERYTHING HERE AND BELOW IS OLD. ABOVE IS GOOD
-        <div class="container-fluid">
-            <div class="col-md-4">
-              <p>Enter your ID and click candidate to vote</p>
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" id="voter_id" placeholder="Enter ID">
-              </div>
-              <button class="btn btn-primary btn-vote" type="button">Vote</button>
-              <div id="msg">
-                <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
-              </div>
-            </div>
-            <div class="col-md-6">
-              <button class="btn btn-primary btn-numOfVotes" type="button">Count Votes</button>
-              <div id="vote_box"></div>
-            </div>
-          </div>
-      </div>
     </div>
 
     <!-- NEW BALLOT INSTANCE -->
     <div class="collapse" id="collapseNEW">
       <form class="w-50 p-10 mx-auto text-center border border-white">
-        <!-- The radio buttons -->
+        <!--
         <div class="custom-control custom-radio">
             <input type="radio" id="premium" name="radio" class="custom-control-input">
             <label class="custom-control-label" for="premium" data-toggle="tooltip" data-placement="bottom" title="While this will gaurantee each vote is intamperable, it is more expensive.">
@@ -105,7 +83,7 @@
             Everyday Voting (Only ballet results get uploaded to the blockchain)
           </label>
         </div>
-
+        -->
         <br/><br/>
 
         <!-- The Candidate Specification-->
@@ -120,7 +98,9 @@
           <button type="button" class="btn btn-primary btn-addCand" data-toggle="tooltip" data-placement="bottom" title="Add another candidate to ballot">Add Candidate</button>
           <button type="button" class="btn btn-primary btn-removeCand" data-toggle="tooltip" data-placement="bottom" title="Remove latest candidate, as long as there are at least 2">Remove Candidate</button>
           <small id="CandidateNote" class="form-text text-muted">Add as many candidates as desired</small>
-        
+          <div id="candidate_msg">
+            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+          </div>
         </div>
         <br/>
         <div class="form-group">
@@ -130,7 +110,9 @@
             <option selected>Hours...</option>
             <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
           </select>
-
+          <div id="length_msg">
+            <!-- VOTING PROCEDURE MESSAGE WILL APPEAR HERE-->
+          </div>
         </div>
         <br/>
         <button type="button" class="btn-lg btn-primary btn-createBallot" data-toggle="tooltip" data-placement="bottom" title="Once deployed, you will recieve a Ballet ID. This Ballet ID is needed for anyone wanting to participate in this voting instance.">Deploy Voting Instance</button>
@@ -141,12 +123,6 @@
     </div>
 
 
-<!-- 
-  A BUTTON THAT GIVES SUGGESTIONS BESIDE IT
-  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-  Tooltip on top
-</button> 
--->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

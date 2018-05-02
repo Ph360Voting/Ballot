@@ -172,9 +172,13 @@ App = {
         button2.setAttribute("type", "button");
         button2.innerHTML = "End Vote";
         buttons.append(button2);
+      
 
         form.append(buttons);
         $("#vote_space").html(form);
+
+        $("#vote_space").append("<div id=\"endVote_msg\"></div>");
+         
         $('#kqr').html("");
       })
   },
@@ -240,8 +244,13 @@ App = {
   // end the specified ballot
   endVote: function () {
     App.contracts.Voting.deployed().then(function(instance) {
-      instance.setEndedBallot(window.uid).then(function(blah) {
-        return App.Results();
+      instance.setEndedBallot(window.uid).then(function(status) {
+        if (status)
+          return App.Results();
+        else {
+          $("#endVote_msg").html("You do not have premission to end this ballot!");
+          return;
+        }
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)

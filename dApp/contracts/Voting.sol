@@ -48,6 +48,7 @@ contract Voting {
 
     enum Restriction {None, Country}
     struct Ballot {
+        address creator;
         bool exists;
         bool active;
         uint length;
@@ -61,18 +62,23 @@ contract Voting {
     // a function to create a ballot
     function createBallot(bytes32 ballotID, uint len, uint numOfCands, bytes32[] cands, uint[] votes) public { 
         Restriction rest = Restriction.None;
-        ballots[ballotID] = Ballot(true, true, len, numOfCands, rest, cands, votes);
+        ballots[ballotID] = Ballot(msg.sender, true, true, len, numOfCands, rest, cands, votes);
     }
 
 
     /* SETTER FUNCTIONS */
 
     // set ballot to be over
-    function setEndedBallot(bytes32 ballotID) public {
-        ballots[ballotID].active = false;
+    function setEndedBallot(bytes32 ballotID) public returns (bool) {
+        if (msg.sender == ballots[ballotID].creator) {
+            ballots[ballotID].active = false;
+            return true;
+        }
+        else
+            return false;
     }
     
-
+geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal --unlock="0xbbafad45e1ae07285bf5627d810065859dc318e8" --password /home/guy/.ethereum/rinkeby/keystore/pass.txt --rpccorsdomain http://localhost:3000
     /* CHECKING FUNCTIONS */
 
     // a view function to see if a ballot exists

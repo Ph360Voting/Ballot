@@ -78,7 +78,6 @@ contract Voting {
             return false;
     }
     
-geth --rinkeby --rpc --rpcapi db,eth,net,web3,personal --unlock="0xbbafad45e1ae07285bf5627d810065859dc318e8" --password /home/guy/.ethereum/rinkeby/keystore/pass.txt --rpccorsdomain http://localhost:3000
     /* CHECKING FUNCTIONS */
 
     // a view function to see if a ballot exists

@@ -136,12 +136,13 @@ App = {
 
         for (let i = 0 ; i < window.numOfCands ; ++i) {
           var radio = document.createElement("div");
-          radio.setAttribute("class", "custom-control custom-radio");
+          radio.setAttribute("class", "custom-control custom-radio voteRadios");
 
           var input = document.createElement("input");
           input.setAttribute("type", "radio");
           input.setAttribute("id", "candidate"+i);
           input.setAttribute("name", "radio");
+          input.setAttribute("value",i)
           input.setAttribute("class", "custom-control-input");
           radio.append(input);
 
@@ -261,7 +262,16 @@ App = {
 
   // casting a vote after id and ballot are confirmed
   castVote: function() {
-
+    var voteCase = $("form input[type='radio']:checked").val();
+    
+    App.contracts.Voting.deployed().then(function(instance) {
+      instance.addVote(window.uid, voteCase).then(function(status) {
+        $("#vote_space").html("<p>Thank you, your vote has been counted.</p>");
+      })
+    }).catch(function(err){ 
+      console.error("ERROR! " + err.message)
+      return;
+    })
   },
 
   // creating a new ballot

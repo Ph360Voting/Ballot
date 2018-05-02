@@ -77,6 +77,11 @@ contract Voting {
         else
             return false;
     }
+
+    // add vote
+    function addVote(bytes32 ballotID, uint index) public returns (bool) {
+        ballots[ballotID].voteCount[index]++;
+    }
     
     /* CHECKING FUNCTIONS */
 

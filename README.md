@@ -2,7 +2,7 @@
 
 ### Made by Shifra and Guy as part of our final project for Ph360
 
-dApp will run on port 4200 and try to connect to the blockchain through port 7545.
+dApp will run on port 4200 and try to connect to the blockchain through port 8545.
 If you wanna change this you can update your preferences in bs-config.json and truffle.js respectivly.
 
 ## To run the full dApp, download and run in the dApp folder:

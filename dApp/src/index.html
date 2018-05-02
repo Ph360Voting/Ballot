@@ -41,7 +41,7 @@
 
     <div class="container-fluid d-flex justify-content-center" id="index_button">
       <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseID" aria-expanded="false" aria-controls="collapseExample">
-        Enter a Vote Instance ID
+        Enter a Ballot ID
       </button> 
       <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseNEW" aria-expanded="false" aria-controls="collapseExample">
         Create a Vote Instance
@@ -65,9 +65,6 @@
         </div>
       </div>
     </div>
-
-    <div id="kqr" class="container-fluid d-flex justify-content-center"></div>  <!-- Where the QR code will be loaded if the ballot is found-->
-    <div id="vote_space" class="container-fluid d-flex justify-content-center"></div> <!-- Where the voting selection process actually takes place-->
 
     <!-- NEW BALLOT INSTANCE -->
     <div class="collapse" id="collapseNEW">
@@ -123,7 +120,10 @@
       <br/><br/><br/><br/>
     </div>
 
+    <div id="kqr" class="container-fluid d-flex justify-content-center"></div>  <!-- Where the QR code will be loaded if the ballot is found-->
+    <div id="vote_space" class="container-fliud p-5 mx-auto text-center d-flex flex-column align-content-between"></div> <!-- Where the voting selection process actually takes place-->
 
+    
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

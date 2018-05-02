@@ -2,14 +2,7 @@ pragma solidity ^0.4.17;
 // written for Solidity version 0.4.18 and above that doesnt break functionality
 
 contract Voting {
-    // an event that is called whenever a Candidate is added so the frontend could
-    // appropriately display the candidate with the right element id (it is used
-    // to vote for the candidate, since it is one of arguments for the function "vote")
-    event AddedCandidate(uint candidateID);
-
-
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  These functions perform transactions, editing the mappings *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /*
@@ -49,9 +42,6 @@ contract Voting {
     */
 
 
-    /* My added functions for uPort integration and accessing a ballot (basicall,
-    from the beginning to the point that the person actually gets to vote)  */
-
     // contract constructor
     constructor() public {
     }
@@ -59,6 +49,7 @@ contract Voting {
     enum Restriction {None, Country}
     struct Ballot {
         bool exists;
+        bool active;
         uint length;
         uint numOfCands;
         Restriction restriction;  // the restrictions that can be applied to voting
@@ -70,16 +61,38 @@ contract Voting {
     // a function to create a ballot
     function createBallot(bytes32 ballotID, uint len, uint numOfCands, bytes32[] cands, uint[] votes) public { 
         Restriction rest = Restriction.None;
-        ballots[ballotID] = Ballot(true, len, numOfCands, rest, cands, votes);
+        ballots[ballotID] = Ballot(true, true, len, numOfCands, rest, cands, votes);
     }
 
-    // a view function to find a ballot
+
+    /* SETTER FUNCTIONS */
+
+    // set ballot to be over
+    function setEndedBallot(bytes32 ballotID) public {
+        ballots[ballotID].active = false;
+    }
+    
+
+    /* CHECKING FUNCTIONS */
+
+    // a view function to see if a ballot exists
     function confirmBallot(bytes32 ballotID) public view returns (bool) {
         if (ballots[ballotID].exists == true)
             return true;
         else
             return false;
     }
+
+    // a vew function to see if a ballot is still active
+    function checkActiveBallot(bytes32 ballotID) public view returns (bool) {
+        if (ballots[ballotID].active)
+            return true;
+        else
+            return false;
+    }
+
+
+    /* GETTER FUNCTIONS */
 
     // a view function of the length of candidate list
     function getCandidateSize(bytes32 ballotID) public view returns (uint) {
@@ -89,5 +102,10 @@ contract Voting {
     // a view function to access a ballots candidates
     function getCandidateInfo(bytes32 ballotID) public view returns (bytes32[]) {
         return( ballots[ballotID].candidates);
+    }
+
+    // a view function to access a ballots candidates
+    function getVotingInfo(bytes32 ballotID) public view returns (uint[]) {
+        return( ballots[ballotID].voteCount);
     }
 }

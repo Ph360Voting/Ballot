@@ -11,12 +11,12 @@ App = {
   web3Provider: null,
   contracts: {},
 
+  // beginning of initialization...
   init: function() {
     return App.initWeb3();
   },
 
   initWeb3: function() {
-
     // checking if there is a web3 instance alreadly active (Mist / Metmask have their own web3 instances).
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
@@ -44,139 +44,54 @@ App = {
     })
     return App.bindEvents();
   },
+  // end of initialization...
 
   bindEvents: function() {
     $(document).on('click', '.btn-addCandidate', App.addCandidate);
     $(document).on('click', '.btn-ballotCheck', App.ballotCheck);
     $(document).on('click', '.btn-numOfVotes', App.findNumOfVotes);
-
     $(document).on('click', '.btn-vote', App.vote);
     $(document).on('click', '.btn-createBallot', App.createBallot);
     $(document).on('click', '.btn-castVote', App.castVote);
     $(document).on('click', '.btn-addCand', App.addCand);
     $(document).on('click', '.btn-removeCand', App.removeCand);
+    $(document).on('click', '.btn-endVote', App.endVote);
   },
 
-  /*
-  // function called when user adds a candidate
-  addCandidate: function() {
-    // deploy the voting contract
-    App.contracts.Voting.deployed().then(function(instance) {
-      var votingInstance = instance
-
-      // will add a candidate and increment the candidate count
-      votingInstance.addCandidate( $("#candidate_id").val() , $("#candidate_party").val() ).then(function(result){ 
-        $("#candidate_box").append(`<div class='form-check'><input class='form-check-input' type='checkbox' value='' id=${result.logs[0].args.candidateID}><label class='form-check-label' for=0>${$("#candidate_id").val()}</label></div>`)
-      })
-
-      // calls getNumOfCandidates() function in Smart Contract, 
-      // this is not a transaction though, since the function is marked with "view" and
-      // truffle contract automatically knows this
-      votingInstance.getNumOfCandidates().then(function(numOfCandidates){
-        // sets global variable for number of Candidates
-        // displaying and counting the number of Votes depends on this
-        window.numOfCandidates = numOfCandidates
-      })
-
-    }).catch(function(err){ 
-      console.error("ERROR! " + err.message)
-    })
-  },
-
-  // Function that is called when user clicks the "vote" button
-  vote: function() {
-    var uid = $("#voter_id").val() //getting user inputted id
-
-    // Application Logic 
-    if (uid == ""){
-      $("#msg").html("<p>Please enter id.</p>")
-      return
-    }
-    // Checks whether a candidate is chosen or not.
-    // if it is, we get the Candidate's ID, which we will use
-    // when we call the vote function in Smart Contracts
-    if ($("#candidate_box :checkbox:checked").length > 0){ 
-      // just takes the first checked box and gets its id
-      var candidateID = $("#candidate_box :checkbox:checked")[0].id
-    } 
-    else {
-      // print message if user didn't vote for candidate
-      $("#msg").html("<p>Please vote for a candidate.</p>")
-      return
-    }
-    // Actually voting for the Candidate and displaying "Voted"
-    App.contracts.Voting.deployed().then(function(instance){
-      instance.vote( uid , parseInt(candidateID) ).then(function(result){
-        $("#msg").html("<p>Voted</p>")
-      })
-    }).catch(function(err){ 
-      console.error("ERROR! " + err.message)
-    })
-  },
-
-  // function called when the "Count Votes" button is clicked
-  findNumOfVotes: function() {
-    App.contracts.Voting.deployed().then(function(instance) {
-      var votingInstance = instance;
-      // this is where we will add the candidate vote Info before replacing whatever is in #vote_box
-      var box = $("<section></section>")
-
-      // loop through the number of candidates and display their votes
-      for (var i = 0; i < window.numOfCandidates; i++) {
-        // calls two smart contract functions
-        var candidatePromise = votingInstance.getCandidate(i)
-        var votesPromise = votingInstance.totalVotes(i)
-
-        // resolves Promises by adding them to the variable box
-        Promise.all( [ candidatePromise , votesPromise ] ).then( function(data){
-          box.append(`<p>${window.web3.toAscii(data[0][1])}: ${data[1]}</p>`)
-        }).catch(function(err){ 
-          console.error("ERROR! " + err.message)
-        })
-      }
-      $("#vote_box").html(box) // displays the "box" and replaces everything that was in it before
-    }).catch(function(err){ 
-      console.error("ERROR! " + err.message)
-    })
-  },
-*/
   // checks that the inputted ballot is real and still active, and loads it into window
   ballotCheck: function() {
-    var uid = $("#ballot_id").val(); //getting user inputted ballot id
-    if (uid == ""){
+    window.uid = $("#ballot_id").val(); //getting user inputted ballot id
+    if (window.uid == ""){
       $("#msg").html("<p>Please enter id.</p>");
       return;
     }
 
     App.contracts.Voting.deployed().then(function(instance) {
-      instance.confirmBallot(uid).then(function(result) {
+      instance.confirmBallot(window.uid).then(function(result) {
         if (!result) {
           $("#msg").html("<p>No ballot with inputted ID. Either incorrect Ballot ID or nonexistent ballot.</p>");
           exists = false;
           return; 
         }
         else {          
-          instance.getCandidateSize(uid).then(function(size) {
+          instance.getCandidateSize(window.uid).then(function(size) {
             window.numOfCands = size;
           })
 
           window.candidates = [];
-          instance.getCandidateInfo(uid).then(function(cands) {
+          instance.getCandidateInfo(window.uid).then(function(cands) {
             for (let i = 0 ; i < window.numOfCands ; ++i)
               window.candidates[i] = web3.toAscii(cands[i]);
-        })
-  
-        return App.LoadQR();
+          })
+
+          instance.checkActiveBallot(window.uid).then(function(active) {
+            if (active)
+              return App.LoadQR();
+            else
+              return App.Results();
+          })
         }
       })
-      
-      /*
-      var currentTime = Date.now();
-      if (currentTime > ballot[0]) // if true then the ballot is no longer active
-        return
-      else
-        return App.LoadQR();
-      */
 
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
@@ -219,7 +134,7 @@ App = {
         title.append(head);
         form.append(title);
 
-        for (let i = 0 ; i < window.numOfCands -1 ; ++i) {
+        for (let i = 0 ; i < window.numOfCands ; ++i) {
           var radio = document.createElement("div");
           radio.setAttribute("class", "custom-control custom-radio");
 
@@ -242,14 +157,97 @@ App = {
         form.append(breakd);
         form.append(breakd);
         
-        var button = document.createElement("button");
-        button.setAttribute("class", "btn btn-primary btn-castVote");
-        button.setAttribute("type", "button");
-        button.innerHTML = "Vote!";
-        form.append(button);
+        var buttons = document.createElement("div");
+        var button1 = document.createElement("button");
+        button1.setAttribute("class", "btn btn-primary btn-castVote");
+        button1.setAttribute("type", "button");
+        button1.innerHTML = "Vote!";
+        buttons.append(button1);
+
+        var parBreak = document.createElement("p");
+        buttons.append(parBreak);
+
+        var button2 = document.createElement("button");
+        button2.setAttribute("class", "btn btn-primary btn-endVote");
+        button2.setAttribute("type", "button");
+        button2.innerHTML = "End Vote";
+        buttons.append(button2);
+
+        form.append(buttons);
         $("#vote_space").html(form);
         $('#kqr').html("");
       })
+  },
+
+  // load results of a ballot (will only be done if ballot is over)
+  Results: function() {
+    window.voteCount = [];
+    App.contracts.Voting.deployed().then(function(instance) {
+      instance.getVotingInfo(window.uid).then(function(Votes) {
+        for (let i = 0 ; i < window.numOfCands ; ++i) {
+          window.voteCount.push(web3.toDecimal(Votes[i]));
+        }
+        var header = document.createElement("p");
+        var title = document.createElement("h2");
+        title.innerHTML = "RESULTS";
+        header.append(title);
+        $("#vote_space").html(header);
+    
+        var table = document.createElement("table");
+        table.setAttribute("class","table");
+
+        var thead = document.createElement("thead");
+        thead.setAttribute("class", "thead-dark");
+
+        var row = document.createElement("tr");
+
+        var data1 = document.createElement("th");
+        data1.setAttribute("scope","col");
+        data1.innerHTML = "Candidates";
+        var data2 = document.createElement("th");
+        data2.setAttribute("scope","col");
+        data2.innerHTML = "Vote Count";
+        row.append(data1);
+        row.append(data2);
+
+        thead.append(row);
+
+        table.append(thead);
+
+        var body = document.createElement("tbody");
+        for (let i = 0 ; i < window.numOfCands ; ++i) {
+          var row = document.createElement("tr");
+          
+          var data1 = document.createElement("td");
+          data1.innerHTML = window.candidates[i];
+    
+          var data2 = document.createElement("td");
+          data2.innerHTML = window.voteCount[i];
+    
+          row.append(data1);
+          row.append(data2);
+          body.append(row);  
+        }
+        table.append(body);
+        $("#vote_space").append(table);
+      })
+    }).catch(function(err){ 
+      console.error("ERROR! " + err.message)
+      return;
+    })
+  },
+  
+  // end the specified ballot
+  endVote: function () {
+    App.contracts.Voting.deployed().then(function(instance) {
+      instance.setEndedBallot(window.uid).then(function(blah) {
+        return App.Results();
+      })
+    }).catch(function(err){ 
+      console.error("ERROR! " + err.message)
+      return;
+    })
+
   },
 
   // casting a vote after id and ballot are confirmed
@@ -268,7 +266,8 @@ App = {
     var candidates = [];  // participarting candidates in ballot
     var votes = [];
     var candlist = $("input");
-    for (let i = 0 ; i < candlist.length - 1 ; i++) {
+
+    for (let i = 0 ; i < candlist.length - 1  ; ++i) {
       let temp = "#Candidate" + (i+1);
       if ($(temp).val() == "") {
         $("#candidate_msg").html("<p>Candidates not entered. Please delete unused candidates. Minimum amount of candidates is 2.</p>");
@@ -286,7 +285,7 @@ App = {
 
     App.contracts.Voting.deployed().then(function(instance) {
       // use the contract function createBallot
-      instance.createBallot(ballotID, parseInt(length), candlist.length, candidates, votes).then(function(result){
+      instance.createBallot(ballotID, parseInt(length), (candlist.length - 1), candidates, votes).then(function(result){
         // update the user on the ballotID, so that ballot can be accessed
         $("#ballotID_return").html("<p>Ballot ID:<\p>" + ballotID);
       })

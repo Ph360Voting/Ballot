@@ -1,0 +1,40 @@
+html,body {
+    height:100vh;  
+    margin: 0 auto;
+    padding-top: 00px;
+    overflow: auto; 
+  }
+
+.navbar {
+    background-color: #16163d;
+}
+
+#jumbo {
+    min-height: 105%;
+    background: linear-gradient(#0c0c16, #38385f);
+}
+
+#jumbo .container {
+    margin: 5rem;
+    max-width:60%;
+    padding: 3rem;
+    background: #40406d;
+    color: #9494a3;
+    list-style-type: circle;
+}
+
+#jumbo .container h1 {
+    color: #d9d9e4;
+    text-align: center;
+    padding-bottom: 2rem;
+    
+}
+
+#jumbo .container li {
+    padding: 0.5rem;
+}
+
+#lead {
+    margin-top: 2rem;
+    text-align: center;
+}

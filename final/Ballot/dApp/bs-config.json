@@ -1,8 +1,0 @@
-{
-  "server": {
-    "baseDir": ["./src", "./build/contracts"]
-  },
-  "notify": false,
-  "port": 4200
-
-}

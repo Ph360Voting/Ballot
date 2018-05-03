@@ -77,6 +77,9 @@ App = {
           instance.getCandidateSize(window.uid).then(function(size) {
             window.numOfCands = size;
           })
+          instance.getBallotTitle(window.uid).then(function(title) {
+            window.ballotTitle = title;
+          })
 
           window.candidates = [];
           instance.getCandidateInfo(window.uid).then(function(cands) {
@@ -130,7 +133,7 @@ App = {
 
         var title = document.createElement("p");
         var head = document.createElement("h2");
-        head.innerHTML = "Vote below:";
+        head.innerHTML = window.ballotTitle;
         title.append(head);
         form.append(title);
 
@@ -277,6 +280,8 @@ App = {
   // creating a new ballot
   createBallot: function() {
 
+    var title = $("#ballot_title").val()
+
     var length = $("#ballot_length").val();  //length of time ballot will be open
     if (length == "Hours...") {
       $("#length_msg").html("<p>Please pick a length of time this ballot will be active.</p>");
@@ -304,7 +309,7 @@ App = {
 
     App.contracts.Voting.deployed().then(function(instance) {
       // use the contract function createBallot
-      instance.createBallot(ballotID, parseInt(length), (candlist.length - 1), candidates, votes).then(function(result){
+      instance.createBallot(title, ballotID, parseInt(length), (candlist.length - 2), candidates, votes).then(function(result){
         // update the user on the ballotID, so that ballot can be accessed
         $("#ballotID_return").html("<p>Ballot ID:<\p>" + ballotID);
       })

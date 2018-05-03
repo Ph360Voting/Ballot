@@ -13,6 +13,15 @@ truffle migrate
 npm run dev
 ```
 
+## To run on a local test network (Ganache is the recommended default), use the command:
+```
+truffle migrate
+```
+## To run on a test network like Rinkeby, change command to:
+```
+truffle migrate --network rinkeby
+```
+
 ## To simply see the front-end, one can download and simply run in the dApp folder
 ```
 npm run dev

@@ -60,6 +60,7 @@ App = {
 
   // checks that the inputted ballot is real and still active, and loads it into window
   ballotCheck: function() {
+
     window.uid = $("#ballot_id").val(); //getting user inputted ballot id
     if (window.uid == ""){
       $("#msg").html("<p>Please enter id.</p>");
@@ -86,16 +87,18 @@ App = {
             for (let i = 0 ; i < window.numOfCands ; ++i)
               window.candidates[i] = web3.toAscii(cands[i]);
           })
-
-          instance.checkActiveBallot(window.uid).then(function(active) {
-            if (active)
-              return App.LoadQR();
-            else
-              return App.Results();
+          instance.getEndTime(window.uid).then(function(endDate) {
+            
+            instance.checkActiveBallot(window.uid).then(function(active) {
+              var d = new Date();
+              if (Boolean(active) || d.getTime() < endDate)
+                return App.LoadQR();
+              else
+                return App.Results();
+            })
           })
         }
       })
-
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
     })
@@ -103,93 +106,113 @@ App = {
 
   // Loads the QR for uPort if the inputted Ballot ID is found and verified
   LoadQR: function() { 
-    //$("#msg").html("");
+    $("#msg").html("");
     $("#vote_space").html("");
     window.qr = true; 
+
     // Request credentials to login
-    uport.requestCredentials({
-      requested: ['name', 'country'],
-      notifcations: true },
-      (uri) => {
-
-        const qr = kjua({
-          text: uri,
-          fill: '#000000',
-          size: 400,
-          back: 'rgba(255,255,255,1)'
-        })
-
-        // Create wrapping link for mobile touch
-        let aTag = document.createElement('a')
-        aTag.href = uri
-
-        // Nest QR in <a> and inject
-        aTag.appendChild(qr)
-        $('#kqr').html(aTag)
-
-      }).then((credentials) => {
-        var form = document.createElement("form");
-        form.setAttribute("class", "container-fliud h-50 p-5 mx-auto text-center d-flex flex-column align-content-between")
-
-        var title = document.createElement("p");
-        var head = document.createElement("h2");
-        head.innerHTML = window.ballotTitle;
-        title.append(head);
-        form.append(title);
-
-        for (let i = 0 ; i < window.numOfCands ; ++i) {
-          var radio = document.createElement("div");
-          radio.setAttribute("class", "custom-control custom-radio voteRadios");
-
-          var input = document.createElement("input");
-          input.setAttribute("type", "radio");
-          input.setAttribute("id", "candidate"+i);
-          input.setAttribute("name", "radio");
-          input.setAttribute("value",i)
-          input.setAttribute("class", "custom-control-input");
-          radio.append(input);
-
-          var label = document.createElement("label");
-          label.setAttribute("class", "custom-control-label");
-          label.setAttribute("for", "candidate"+i);
-          label.innerHTML = window.candidates[i];
-          radio.append(label); 
-
-          form.append(radio);
-        }
-        var breakd = document.createElement("br");
-        form.append(breakd);
-        form.append(breakd);
-        
-        var buttons = document.createElement("div");
-        var button1 = document.createElement("button");
-        button1.setAttribute("class", "btn btn-primary btn-castVote");
-        button1.setAttribute("type", "button");
-        button1.innerHTML = "Vote!";
-        buttons.append(button1);
-
-        var parBreak = document.createElement("p");
-        buttons.append(parBreak);
-
-        var button2 = document.createElement("button");
-        button2.setAttribute("class", "btn btn-primary btn-endVote");
-        button2.setAttribute("type", "button");
-        button2.innerHTML = "End Vote";
-        buttons.append(button2);
-      
-
-        form.append(buttons);
-        $("#vote_space").html(form);
-
-        $("#vote_space").append("<div id=\"endVote_msg\"></div>");
-         
-        $('#kqr').html("");
+    var req = { requested: ['country'],}
+    uport.requestCredentials(req , (uri) => {
+      const qr = kjua({
+        text: uri,
+        fill: '#000000',
+        size: 400,
+        back: 'rgba(255,255,255,1)'
       })
+
+      // Create wrapping link for mobile touch
+      let aTag = document.createElement('a')
+      aTag.href = uri
+
+      // Nest QR in <a> and inject
+      aTag.appendChild(qr)
+      $('#kqr').html(aTag)
+
+    }).then(credentials => {
+      var rest = false;
+      App.contracts.Voting.deployed().then(function(instance) {
+        instance.getBallotRestriction(window.uid).then(function(restriction) {
+          if (restriction) {
+            instance.getBallotCountry(window.uid).then(function(country) {
+              if (credentials.country != web3.toAscii(country).substring(0,2)) {
+                $("#kqr").html("You do not have premission to participate in this ballot.");
+                $("#vote_space").html("");
+                rest = true;
+              }
+            })
+          }
+          if (!Boolean(rest)) {
+            var form = document.createElement("form");
+            form.setAttribute("class", "container-fliud h-50 p-5 mx-auto text-center d-flex flex-column align-content-between")
+
+            var title = document.createElement("p");
+            var head = document.createElement("h2");
+            head.innerHTML = window.ballotTitle;
+            title.append(head);
+            form.append(title);
+
+            for (let i = 0 ; i < window.numOfCands ; ++i) {
+              var radio = document.createElement("div");
+              radio.setAttribute("class", "custom-control custom-radio voteRadios");
+
+              var input = document.createElement("input");
+              input.setAttribute("type", "radio");
+              input.setAttribute("id", "candidate"+i);
+              input.setAttribute("name", "radio");
+              input.setAttribute("value",i)
+              input.setAttribute("class", "custom-control-input");
+              radio.append(input);
+
+              var label = document.createElement("label");
+              label.setAttribute("class", "custom-control-label");
+              label.setAttribute("for", "candidate"+i);
+              label.innerHTML = window.candidates[i];
+              radio.append(label); 
+
+              form.append(radio);
+            }
+            var breakd = document.createElement("br");
+            form.append(breakd);
+            form.append(breakd);
+            
+            var buttons = document.createElement("div");
+            var button1 = document.createElement("button");
+            button1.setAttribute("class", "btn btn-primary btn-castVote");
+            button1.setAttribute("type", "button");
+            button1.innerHTML = "Vote!";
+            buttons.append(button1);
+
+            var parBreak = document.createElement("p");
+            buttons.append(parBreak);
+
+            var button2 = document.createElement("button");
+            button2.setAttribute("class", "btn btn-primary btn-endVote");
+            button2.setAttribute("type", "button");
+            button2.innerHTML = "End Vote";
+            buttons.append(button2);
+          
+
+            form.append(buttons);
+            $("#vote_space").html(form);
+
+            $("#vote_space").append("<div id=\"endVote_msg\" class=\"container-fliud h-50 p-5 mx-auto text-center d-flex flex-column align-content-between\"></div>");
+            
+            $('#kqr').html("");
+          }
+        })
+      }).catch(function(err){ 
+        console.error("ERROR! " + err.message)
+        return;
+      })
+
+      
+    })
   },
 
   // load results of a ballot (will only be done if ballot is over)
   Results: function() {
     window.voteCount = [];
+
     App.contracts.Voting.deployed().then(function(instance) {
       instance.getVotingInfo(window.uid).then(function(Votes) {
         for (let i = 0 ; i < window.numOfCands ; ++i) {
@@ -241,26 +264,21 @@ App = {
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
-      return;
     })
   },
   
   // end the specified ballot
   endVote: function () {
     App.contracts.Voting.deployed().then(function(instance) {
-      instance.setEndedBallot(window.uid).then(function(status) {
-        if (status)
+      instance.setEndedBallot(window.uid).then(function(creator) {
+        if (Boolean(creator))
           return App.Results();
-        else {
+        else
           $("#endVote_msg").html("You do not have premission to end this ballot!");
-          return;
-        }
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
-      return;
     })
-
   },
 
   // casting a vote after id and ballot are confirmed
@@ -273,25 +291,45 @@ App = {
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)
-      return;
     })
   },
 
   // creating a new ballot
   createBallot: function() {
+    $("#length_msg").html("");
+    $("#candidate_msg").html("");
+    $("#country_msg").html("");
 
+    // restrictions
+    var rest = $("form input[type='radio']:checked").val();
+    var restriction;
+    var country = "";
+    if (rest == "country")
+      restriction = true;
+    else
+      restriction = false;
+    if (restriction) {
+      country = $("#country_rest").val();
+      if (country == "") {
+        $("#country_msg").html("<p>Please pick a country from which voters in your ballot must belong.</p>");
+        return;
+      }
+    }
+
+    // ballot title
     var title = $("#ballot_title").val()
-
-    var length = $("#ballot_length").val();  //length of time ballot will be open
-    if (length == "Hours...") {
-      $("#length_msg").html("<p>Please pick a length of time this ballot will be active.</p>");
+    if (title == "") {
+      $("#title_msg").html("<p>Please your ballot a title or question.</p>");
       return;
     }
+
+    // candidates
     var candidates = [];  // participarting candidates in ballot
     var votes = [];
-    var candlist = $("input");
+    var cands = document.getElementById("cands");
+    var numOfCands = cands.getElementsByTagName("input").length;
 
-    for (let i = 0 ; i < candlist.length - 1  ; ++i) {
+    for (let i = 0 ; i < numOfCands  ; ++i) {
       let temp = "#Candidate" + (i+1);
       if ($(temp).val() == "") {
         $("#candidate_msg").html("<p>Candidates not entered. Please delete unused candidates. Minimum amount of candidates is 2.</p>");
@@ -301,17 +339,29 @@ App = {
       votes[i] = 0;
     }
 
+    // length of ballot calculated
+    var length = $("#ballot_length").val();  
+    if (length == "") {
+      $("#length_msg").html("<p>Please pick a length of time this ballot will be active.</p>");
+      return;
+    }
+    var d = new Date();
+    var size = d.getTime() + parseInt(length)*3.6*Math.pow(10,6); // size is the time ballot will expire
+
     // ballotID creation
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     var ballotID = "";
     for (let i = 0 ; i < 8 ; i++)
       ballotID += possible.charAt(Math.floor(Math.random() * possible.length));
-
+    
+    // deploying the ballot to the blockchain network
     App.contracts.Voting.deployed().then(function(instance) {
       // use the contract function createBallot
-      instance.createBallot(title, ballotID, parseInt(length), (candlist.length - 2), candidates, votes).then(function(result){
+      instance.createBallot(title, ballotID, size, numOfCands, candidates, votes, restriction, country).then(function(result){
         // update the user on the ballotID, so that ballot can be accessed
-        $("#ballotID_return").html("<p>Ballot ID:<\p>" + ballotID);
+        $("#ballotID_return").attr("class", "container border border-primary rounded-circle d-flex flex-column align-items-center justify-content-center font-weight-bold");
+        $("#ballotID_return").attr("style", "width: 11rem;height: 11rem;");
+        $("#ballotID_return").html("<p>Ballot ID</p><h3>" + ballotID + "</h3>");
       })
     }).catch(function(err){ 
       console.error("ERROR! " + err.message)

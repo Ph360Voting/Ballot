@@ -33,3 +33,15 @@ html,body {
 #collapseNEW {
     margin-top: 5rem;
 }
+
+.dropdown-menu {
+    height: 22rem;
+    width: 15rem;
+    overflow: scroll;
+}
+
+#menu2 {
+    height: 15rem;
+    max-width: 1rem;
+    overflow: scroll;
+}

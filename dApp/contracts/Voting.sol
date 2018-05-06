@@ -2,51 +2,7 @@ pragma solidity ^0.4.17;
 // written for Solidity version 0.4.18 and above that doesnt break functionality
 
 contract Voting {
-     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  These functions perform transactions, editing the mappings *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    /*
-    function addCandidate(bytes32 name, bytes32 party) public {
-        candidateID is the return variable
-        uint candidateID = numCandidates++;
-        // Create new Candidate Struct with name and saves it to storage.
-        candidates[candidateID] = Candidate(name,party,true);
-        emit AddedCandidate(candidateID);
-    }
 
-    function vote(bytes32 uid, uint candidateID) public {
-        // checks if the struct exists for that candidate
-        if (candidates[candidateID].doesExist == true) {
-            uint voterID = numVoters++; //voterID is the return variable
-            voters[voterID] = Voter(uid,candidateID);
-        }
-    }
-    */
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * 
-     *  Getter Functions, marked by the key word "view" *
-     * * * * * * * * * * * * * * * * * * * * * * * * * */
-    
-
-    // finds the total amount of votes for a specific candidate by looping
-    // through voters 
-    /*function totalVotes(uint candidateID) view public returns (uint) {
-        uint numOfVotes = 0; // we will return this
-        for (uint i = 0; i < numVoters; i++) {
-            // if the voter votes for this specific candidate, we increment the number
-            if (voters[i].candidateIDVote == candidateID) {
-                numOfVotes++;
-            }
-        }
-        return numOfVotes; 
-    }
-    */
-
-
-    // contract constructor
-    constructor() public {
-    }
-
-    enum Restriction {None, Country}
     struct Ballot {
         string title;
         address creator;
@@ -54,16 +10,16 @@ contract Voting {
         bool active;
         uint length;
         uint numOfCands;
-        Restriction restriction;  // the restrictions that can be applied to voting
+        bool restriction;  // the restrictions that can be applied to voting
+        bytes32 country;
         bytes32[] candidates;
         uint[] voteCount;
     }
     mapping (bytes32 => Ballot) ballots; // unique ID that will be used to identify the Ballot
 
     // a function to create a ballot
-    function createBallot(string title, bytes32 ballotID, uint len, uint numOfCands, bytes32[] cands, uint[] votes) public { 
-        Restriction rest = Restriction.None;
-        ballots[ballotID] = Ballot(title, msg.sender, true, true, len, numOfCands, rest, cands, votes);
+    function createBallot(string title, bytes32 ID, uint len, uint num, bytes32[] cands, uint[] votes, bool rest, bytes32 country) public { 
+        ballots[ID] = Ballot(title, msg.sender, true, true, len, num, rest, country, cands, votes);
     }
 
 
@@ -108,6 +64,21 @@ contract Voting {
     // a view function of the length of candidate list
     function getCandidateSize(bytes32 ballotID) public view returns (uint) {
         return( ballots[ballotID].numOfCands);
+    }
+
+    // a view function of whether the ballot is restricted to country or not
+    function getBallotRestriction(bytes32 ballotID) public view returns (bool) {
+        return( ballots[ballotID].restriction);
+    }
+
+    // a view function of the ballots country restriction
+    function getBallotCountry(bytes32 ballotID) public view returns (bytes32) {
+        return( ballots[ballotID].country);
+    }
+
+    // a view function of the time ballot ends
+    function getEndTime(bytes32 ballotID) public view returns (uint) {
+        return( ballots[ballotID].length);
     }
 
     // a view function to access a ballots candidates

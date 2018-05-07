@@ -91,7 +91,7 @@ App = {
             
             instance.checkActiveBallot(window.uid).then(function(active) {
               var d = new Date();
-              if (Boolean(active) || d.getTime() < endDate)
+              if (active && d.getTime() < endDate)
                 return App.LoadQR();
               else
                 return App.Results();
@@ -271,7 +271,7 @@ App = {
   endVote: function () {
     App.contracts.Voting.deployed().then(function(instance) {
       instance.setEndedBallot(window.uid).then(function(creator) {
-        if (Boolean(creator))
+        if (creator)
           return App.Results();
         else
           $("#endVote_msg").html("You do not have premission to end this ballot!");
@@ -283,7 +283,7 @@ App = {
 
   // casting a vote after id and ballot are confirmed
   castVote: function() {
-    var voteCase = $("form input[type='radio']:checked").val();
+    var voteCase = parseInt($("form input[type='radio']:checked").val());
     
     App.contracts.Voting.deployed().then(function(instance) {
       instance.addVote(window.uid, voteCase).then(function(status) {
@@ -296,6 +296,8 @@ App = {
 
   // creating a new ballot
   createBallot: function() {
+    $("#msg").html("");
+    $("#vote_space").html("");
     $("#length_msg").html("");
     $("#candidate_msg").html("");
     $("#country_msg").html("");
@@ -308,7 +310,7 @@ App = {
       restriction = true;
     else
       restriction = false;
-    if (restriction) {
+    if (Boolean(restriction)) {
       country = $("#country_rest").val();
       if (country == "") {
         $("#country_msg").html("<p>Please pick a country from which voters in your ballot must belong.</p>");
